@@ -1,0 +1,10 @@
+rootProject.name = 'CharsetUtils'
+
+/*
+
+String[] p = []
+p.each { s->
+	include (":"+s);
+	project(":"+s).projectDir=new File(settingsDir,"../../"+s+"/"+s)
+}
+*/
