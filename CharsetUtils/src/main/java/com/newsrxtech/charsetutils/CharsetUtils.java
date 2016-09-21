@@ -77,7 +77,7 @@ public class CharsetUtils {
 	
 	/**
 	 * Best effort to re-encode string to specified {@linkplain Charset} via ICU4J any-latin transliterator. <br/>
-	 * Only works for charsets that are LATIN/US-ASCII based.
+	 * Only works well for charsets that are LATIN/US-ASCII based.
 	 * 
 	 * @param unicode_text
 	 * @return
