@@ -8,8 +8,18 @@ import com.ibm.icu.text.Transliterator;
 
 public class CharsetUtils {
 
-	private static final Charset CP1252 = Charset.forName("CP1252");
-	private static final Charset ISO_8859_1 = StandardCharsets.ISO_8859_1;
+	/**
+	 * Lowest common charset for Latin based orthographies.
+	 */
+	public static final Charset US_ASCII = StandardCharsets.US_ASCII;
+	/**
+	 * Charset as used in US Microsoft Windows.
+	 */
+	public static final Charset CP1252 = Charset.forName("CP1252");
+	/**
+	 * Charset as used in Western Europe Microsoft Windows.
+	 */
+	public static final Charset ISO_8859_1 = StandardCharsets.ISO_8859_1;
 
 	private static final String ANY_LATIN = "Latin-ASCII";
 	private static final String ANY_ASCII = "Any-Latin; Latin-ASCII";
@@ -17,10 +27,7 @@ public class CharsetUtils {
 	private static Transliterator asAscii = Transliterator.getInstance(ANY_ASCII);
 
 	public static byte[] asCp1252Bytes(String unicode_text) {
-		if (unicode_text == null) {
-			return null;
-		}
-		return asCp1252SafeString(unicode_text).getBytes(CP1252);
+		return asCharsetBytes(unicode_text, CP1252);
 	}
 
 	/**
@@ -32,44 +39,11 @@ public class CharsetUtils {
 	 * @return
 	 */
 	public static String asCp1252SafeString(String unicode_text) {
-		if (unicode_text == null) {
-			return null;
-		}
-		CharsetEncoder encoder = CP1252.newEncoder();
-		StringBuilder sb = new StringBuilder();
-		String[] split = unicode_text.split("");
-		for (String letter : split) {
-			if (!encoder.canEncode(letter)) {
-				String asLatinLetter = asLatin.transliterate(letter);
-				if (encoder.canEncode(asLatinLetter)) {
-					sb.append(asLatinLetter);
-					continue;
-				}
-				String asAsciiLetter = asAscii.transliterate(letter);
-				switch (asAsciiLetter) {
-				case "\u018f":
-					asAsciiLetter = "E";
-					break;
-				case "\u0259":
-					asAsciiLetter = "e";
-					break;
-				}
-				if (!encoder.canEncode(asAsciiLetter)) {
-					System.err.println("To Ascii FAIL: '" + asAsciiLetter + "'!");
-				}
-				sb.append(asAsciiLetter);
-				continue;
-			}
-			sb.append(letter);
-		}
-		return sb.toString();
+		return asCharsetSafeString(unicode_text, CP1252);
 	}
 
 	public static byte[] asIso8859_1Bytes(String unicode_text) {
-		if (unicode_text == null) {
-			return null;
-		}
-		return asIso8859_1SafeString(unicode_text).getBytes(ISO_8859_1);
+		return asCharsetBytes(unicode_text, ISO_8859_1);
 	}
 
 	/**
@@ -80,10 +54,39 @@ public class CharsetUtils {
 	 * @return
 	 */
 	public static String asIso8859_1SafeString(String unicode_text) {
+		return asCharsetSafeString(unicode_text, ISO_8859_1);
+	}
+	
+	public static byte[] asAsciiBytes(String unicode_text) {
+		return asCharsetBytes(unicode_text, US_ASCII);
+	}
+
+	/**
+	 * Best effort to re-encode string to US ASCII.
+	 * 
+	 * @param unicode_text
+	 * @return
+	 */
+	public static String asAsciiSafeString(String unicode_text) {
+		return asCharsetSafeString(unicode_text, US_ASCII);
+	}
+	
+	public static byte[] asCharsetBytes(String unicode_text, Charset charset) {
+		return asCharsetSafeString(unicode_text, charset).getBytes(charset);
+	}
+	
+	/**
+	 * Best effort to re-encode string to specified {@linkplain Charset} via ICU4J any-latin transliterator. <br/>
+	 * Only works for charsets that are LATIN/US-ASCII based.
+	 * 
+	 * @param unicode_text
+	 * @return
+	 */
+	public static String asCharsetSafeString(String unicode_text, Charset charset) {
 		if (unicode_text == null) {
 			return null;
 		}
-		CharsetEncoder encoder = ISO_8859_1.newEncoder();
+		CharsetEncoder encoder = charset.newEncoder();
 		StringBuilder sb = new StringBuilder();
 		String[] split = unicode_text.split("");
 		for (String letter : split) {
