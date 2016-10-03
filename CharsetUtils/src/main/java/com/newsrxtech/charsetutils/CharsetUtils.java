@@ -3,6 +3,8 @@ package com.newsrxtech.charsetutils;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang3.text.translate.AggregateTranslator;
 import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
@@ -104,9 +106,13 @@ public class CharsetUtils {
 				}
 				String asAsciiLetter = asAscii.transliterate(letter);
 				if (!encoder.canEncode(asAsciiLetter)) {
-					System.err.print("ESCAPE_EXTENDED_FALLBACK: '" + asAsciiLetter + "' => ");
-					asAsciiLetter = ESCAPE_EXTENDED_FALLBACK.translate(asAsciiLetter);
-					System.err.println(asAsciiLetter);
+					String replacement = ESCAPE_EXTENDED_FALLBACK.translate(asAsciiLetter);
+					if (!alreadyLogged.contains(asAsciiLetter)) {
+						System.err.print("ESCAPE_EXTENDED_FALLBACK: '" + asAsciiLetter + "' => ");
+						System.err.println(replacement);
+						alreadyLogged.add(asAsciiLetter);
+					}
+					asAsciiLetter=replacement;
 				}
 				sb.append(asAsciiLetter);
 				continue;
@@ -115,6 +121,8 @@ public class CharsetUtils {
 		}
 		return sb.toString();
 	}
+	
+	private final static Set<String> alreadyLogged = new HashSet<>();
 	
 	public static final CharSequenceTranslator ESCAPE_EXTENDED_FALLBACK = 
 	        new AggregateTranslator(
