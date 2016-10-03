@@ -4,6 +4,12 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.lang3.text.translate.AggregateTranslator;
+import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
+import org.apache.commons.lang3.text.translate.EntityArrays;
+import org.apache.commons.lang3.text.translate.LookupTranslator;
+import org.apache.commons.lang3.text.translate.NumericEntityEscaper;
+
 import com.ibm.icu.text.Transliterator;
 
 public class CharsetUtils {
@@ -97,16 +103,10 @@ public class CharsetUtils {
 					continue;
 				}
 				String asAsciiLetter = asAscii.transliterate(letter);
-				switch (asAsciiLetter) {
-				case "\u018f":
-					asAsciiLetter = "E";
-					break;
-				case "\u0259":
-					asAsciiLetter = "e";
-					break;
-				}
 				if (!encoder.canEncode(asAsciiLetter)) {
-					System.err.println("To Ascii FAIL: '" + asAsciiLetter + "'!");
+					System.err.print("ESCAPE_EXTENDED_FALLBACK: '" + asAsciiLetter + "' => ");
+					asAsciiLetter = ESCAPE_EXTENDED_FALLBACK.translate(asAsciiLetter);
+					System.err.println(asAsciiLetter);
 				}
 				sb.append(asAsciiLetter);
 				continue;
@@ -115,4 +115,11 @@ public class CharsetUtils {
 		}
 		return sb.toString();
 	}
+	
+	public static final CharSequenceTranslator ESCAPE_EXTENDED_FALLBACK = 
+	        new AggregateTranslator(
+	            new LookupTranslator(EntityArrays.HTML40_EXTENDED_ESCAPE()),
+	            new NumericEntityEscaper()
+	        );
+	
 }

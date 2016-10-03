@@ -39,6 +39,10 @@ dependencies {
 	//translit from any to latin
 	compile group: 'com.ibm.icu', name: 'icu4j', version: '57.1'
 	
+	//for stringescapeutils for fallback encoding conversion to html5 forms
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+	
+	
 	//only for testing
     testCompile 'org.testng:testng:6.+'
 }
