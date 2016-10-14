@@ -34,8 +34,8 @@ public class CharsetUtils {
 	private static Transliterator asLatin = Transliterator.getInstance(ANY_LATIN);
 	private static Transliterator asAscii = Transliterator.getInstance(ANY_ASCII);
 
-	public static byte[] asCp1252Bytes(String unicode_text) {
-		return asCharsetBytes(unicode_text, CP1252);
+	public static byte[] asCp1252Bytes(String unicode_text, boolean htmlFallback) {
+		return asCharsetBytes(unicode_text, CP1252, htmlFallback);
 	}
 
 	/**
@@ -46,12 +46,12 @@ public class CharsetUtils {
 	 * @param unicode_text
 	 * @return
 	 */
-	public static String asCp1252SafeString(String unicode_text) {
-		return asCharsetSafeString(unicode_text, CP1252);
+	public static String asCp1252SafeString(String unicode_text, boolean htmlFallback) {
+		return asCharsetSafeString(unicode_text, CP1252, htmlFallback);
 	}
 
-	public static byte[] asIso8859_1Bytes(String unicode_text) {
-		return asCharsetBytes(unicode_text, ISO_8859_1);
+	public static byte[] asIso8859_1Bytes(String unicode_text, boolean htmlFallback) {
+		return asCharsetBytes(unicode_text, ISO_8859_1, htmlFallback);
 	}
 
 	/**
@@ -61,12 +61,12 @@ public class CharsetUtils {
 	 * @param unicode_text
 	 * @return
 	 */
-	public static String asIso8859_1SafeString(String unicode_text) {
-		return asCharsetSafeString(unicode_text, ISO_8859_1);
+	public static String asIso8859_1SafeString(String unicode_text, boolean htmlFallback) {
+		return asCharsetSafeString(unicode_text, ISO_8859_1, htmlFallback);
 	}
 	
-	public static byte[] asAsciiBytes(String unicode_text) {
-		return asCharsetBytes(unicode_text, US_ASCII);
+	public static byte[] asAsciiBytes(String unicode_text, boolean htmlFallback) {
+		return asCharsetBytes(unicode_text, US_ASCII, htmlFallback);
 	}
 
 	/**
@@ -75,12 +75,12 @@ public class CharsetUtils {
 	 * @param unicode_text
 	 * @return
 	 */
-	public static String asAsciiSafeString(String unicode_text) {
-		return asCharsetSafeString(unicode_text, US_ASCII);
+	public static String asAsciiSafeString(String unicode_text, boolean htmlFallback) {
+		return asCharsetSafeString(unicode_text, US_ASCII, htmlFallback);
 	}
 	
-	public static byte[] asCharsetBytes(String unicode_text, Charset charset) {
-		return asCharsetSafeString(unicode_text, charset).getBytes(charset);
+	public static byte[] asCharsetBytes(String unicode_text, Charset charset, boolean htmlFallback) {
+		return asCharsetSafeString(unicode_text, charset, htmlFallback).getBytes(charset);
 	}
 	
 	/**
@@ -90,7 +90,7 @@ public class CharsetUtils {
 	 * @param unicode_text
 	 * @return
 	 */
-	public static String asCharsetSafeString(String unicode_text, Charset charset) {
+	public static String asCharsetSafeString(String unicode_text, Charset charset, boolean htmlFallback) {
 		if (unicode_text == null) {
 			return null;
 		}
@@ -105,7 +105,7 @@ public class CharsetUtils {
 					continue;
 				}
 				String asAsciiLetter = asAscii.transliterate(letter);
-				if (!encoder.canEncode(asAsciiLetter)) {
+				if (!encoder.canEncode(asAsciiLetter) && htmlFallback) {
 					String replacement = ESCAPE_EXTENDED_FALLBACK.translate(asAsciiLetter);
 					if (!alreadyLogged.contains(asAsciiLetter)) {
 						System.err.print("ESCAPE_EXTENDED_FALLBACK: '" + asAsciiLetter + "' => ");
