@@ -3,7 +3,7 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'maven'
 
 group "CharsetUtils"
-version = '20161014'
+version = '20161026'
 
 sourceCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
