@@ -1,8 +1,7 @@
 # CharsetUtils
 Charset Utilities - Used mainly for converting UNICODE to closest CP1252 analogues.
 
-[![](https://jitpack.io/v/NewsRxTech/CharsetUtils.svg)](https://jitpack.io/#NewsRxTech/CharsetUtils)
-
+[![Release](https://jitpack.io/v/NewsRxTech/CharsetUtils.svg)](https://jitpack.io/#NewsRxTech/CharsetUtils)
 
 Available via jitpack.io: https://jitpack.io/#NewsRxTech/CharsetUtils
 
@@ -19,7 +18,7 @@ allprojects {
 
 
 	dependencies {
-	        compile 'com.github.NewsRxTech:CharsetUtils:20160921'
+	        compile 'com.github.NewsRxTech:CharsetUtils:20170227'
 	}
 
 ```
