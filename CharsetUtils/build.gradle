@@ -3,7 +3,7 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'maven'
 
 group "CharsetUtils"
-version = '20161026'
+version = '20170227'
 
 sourceCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
@@ -30,11 +30,10 @@ sourceSets {
 
 dependencies {
 	//translit from any to latin
-	compile group: 'com.ibm.icu', name: 'icu4j', version: '58.1'
+	compile group: 'com.ibm.icu', name: 'icu4j', version: '58.2'
 	
 	//for stringescapeutils for fallback encoding conversion to html5 forms
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
-	
 	
 	//only for testing
     testCompile 'org.testng:testng:6.+'
@@ -106,15 +105,15 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//	javadoc.failOnError=false
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
-//}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	javadoc.failOnError=false
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
 
 artifacts {
     archives sourcesJar
-    //archives javadocJar
+    archives javadocJar
 }
 
 configurations.all {
