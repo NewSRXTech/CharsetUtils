@@ -1,7 +1,7 @@
 # CharsetUtils
 Charset Utilities - Used mainly for converting UNICODE to closest CP1252 analogues.
 
-[![Release](https://jitpack.io/v/NewsRxTech/CharsetUtils.svg)](https://jitpack.io/#NewsRxTech/CharsetUtils)
+LATEST RELEASE: [![Release](https://jitpack.io/v/NewsRxTech/CharsetUtils.svg)] (https://jitpack.io/#NewsRxTech/CharsetUtils)
 
 Available via jitpack.io: https://jitpack.io/#NewsRxTech/CharsetUtils
 
