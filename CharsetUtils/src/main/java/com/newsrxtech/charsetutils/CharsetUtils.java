@@ -139,13 +139,15 @@ public class CharsetUtils {
 		}
 		CharsetEncoder encoder = charset.newEncoder();
 		StringBuilder sb = new StringBuilder();
-		String[] split = unicode_text.split("");
-		for (String letter : split) {
+		//String[] split = unicode_text.split("");
+		//for (String letter : split) {
+		unicode_text.codePoints().forEach(cp->{
+			String letter = new String(Character.toChars(cp));
 			if (!encoder.canEncode(letter)) {
 				String asLatinLetter = asLatin.transliterate(letter);
 				if (encoder.canEncode(asLatinLetter)) {
 					sb.append(asLatinLetter);
-					continue;
+					return;
 				}
 				String asAsciiLetter = asAscii.transliterate(letter);
 				if (!encoder.canEncode(asAsciiLetter) && htmlFallback) {
@@ -157,10 +159,10 @@ public class CharsetUtils {
 					asAsciiLetter = replacement;
 				}
 				sb.append(asAsciiLetter);
-				continue;
+				return;
 			}
 			sb.append(letter);
-		}
+		});
 		return sb.toString();
 	}
 
