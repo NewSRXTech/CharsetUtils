@@ -138,7 +138,7 @@ public class CharsetUtils {
 			return null;
 		}
 		CharsetEncoder encoder = charset.newEncoder();
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder(unicode_text.length());
 		//String[] split = unicode_text.split("");
 		//for (String letter : split) {
 		unicode_text.codePoints().forEach(cp->{
