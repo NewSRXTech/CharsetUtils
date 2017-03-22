@@ -150,16 +150,19 @@ public class CharsetUtils {
 					return;
 				}
 				String asAsciiLetter = asAscii.transliterate(letter);
-				if (!encoder.canEncode(asAsciiLetter) && htmlFallback) {
-					String replacement = ESCAPE_EXTENDED_FALLBACK.translate(asAsciiLetter);
+				if (encoder.canEncode(asAsciiLetter)){
+					sb.append(asAsciiLetter);
+					return;
+				}
+				if (htmlFallback) {
+					String htmlEscaped = ESCAPE_EXTENDED_FALLBACK.translate(asAsciiLetter);
 					if (!alreadyLogged.contains(asAsciiLetter)) {
-						log.info("ESCAPE_EXTENDED_FALLBACK: '" + asAsciiLetter + "' => " + replacement);
+						log.info("ESCAPE_EXTENDED_FALLBACK: '" + asAsciiLetter + "' => " + htmlEscaped);
 						alreadyLogged.add(asAsciiLetter);
 					}
-					asAsciiLetter = replacement;
+					sb.append(htmlEscaped);
+					return;
 				}
-				sb.append(asAsciiLetter);
-				return;
 			}
 			sb.append(letter);
 		});
