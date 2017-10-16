@@ -1,10 +1,26 @@
 rootProject.name = 'CharsetUtils'
 
-/*
-
 String[] p = []
+/*
+ * Dynamically locate loosely coupled project dependencies.
+ */
 p.each { s->
 	include (":"+s);
-	project(":"+s).projectDir=new File(settingsDir,"../../"+s+"/"+s)
+	boolean found=false;
+	File f;
+	f = new File(settingsDir,"../"+s); //preferred is side-by-side
+	found = new File(f, "build.gradle").exists();
+	if (!found) {
+		f = new File(settingsDir,"../../"+s); //older directory structure
+		found = new File(f, "build.gradle").exists();
+	}
+	if (!found) {
+		f = new File(settingsDir,"../../"+s+"/"+s); //older directory structure
+		found = new File(f, "build.gradle").exists();
+	}
+	if (!found) {
+		throw new RuntimeException("=== MISSING PROJECT: '"+s+"'");
+	}
+	project(":"+s).projectDir=f
 }
-*/
+
