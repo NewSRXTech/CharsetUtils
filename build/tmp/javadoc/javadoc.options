@@ -1,0 +1,9 @@
+-classpath '/home/michael/git/CharsetUtils/CharsetUtils/build/classes/java/main:/home/michael/git/CharsetUtils/CharsetUtils/build/resources/main:/home/michael/.gradle/caches/modules-2/files-2.1/com.ibm.icu/icu4j/58.2/db9fd4b4c189cf1518db14c67d14a2cfcfbe59f6/icu4j-58.2.jar:/home/michael/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.5/6c6c702c89bfff3cd9e80b04d668c5e190d588c6/commons-lang3-3.5.jar'
+-d '/home/michael/git/CharsetUtils/CharsetUtils/build/docs/javadoc'
+-doctitle 'CharsetUtils 20170322 API'
+-quiet 
+-windowtitle 'CharsetUtils 20170322 API'
+'/home/michael/git/CharsetUtils/CharsetUtils/src/main/java/com/newsrxtech/charsetutils/CharsetUtils.java'
+'/home/michael/git/CharsetUtils/CharsetUtils/src/main/java/com/newsrxtech/charsetutils/log/Log.java'
+'/home/michael/git/CharsetUtils/CharsetUtils/src/main/java/com/newsrxtech/charsetutils/log/PrintFormatter.java'
+'/home/michael/git/CharsetUtils/CharsetUtils/src/main/java/com/newsrxtech/charsetutils/log/ConsoleLogger.java'
