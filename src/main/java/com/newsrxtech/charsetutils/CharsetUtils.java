@@ -46,9 +46,11 @@ public class CharsetUtils {
 	 */
 	public static final Charset ISO_8859_1 = StandardCharsets.ISO_8859_1;
 
-	protected static final String ANY_LATIN = "Latin-ASCII";
-	protected static final String ANY_ASCII = "Any-Latin; Latin-ASCII";
+	protected static final String ANY_LATIN = "Any-Latin";
+	protected static final String ANY_LATIN_ASCII = "Any-Latin; Latin-ASCII";
+	protected static final String ANY_ASCII = "Any-ASCII";
 	protected static Transliterator asLatin = Transliterator.getInstance(ANY_LATIN);
+	protected static Transliterator asLatinAscii = Transliterator.getInstance(ANY_LATIN_ASCII);
 	protected static Transliterator asAscii = Transliterator.getInstance(ANY_ASCII);
 
 	/**
@@ -67,7 +69,7 @@ public class CharsetUtils {
 	 * <strong>This encoding is not identical to ISO-8859-1!</strong>
 	 * 
 	 * @param unicode_text
-	 * @return String mutilated as a best fit to Windows ANSI CP1252. 
+	 * @return String mutilated as a best fit to Windows ANSI CP1252.
 	 */
 	public static String asCp1252SafeString(String unicode_text, boolean htmlFallback) {
 		return asCharsetSafeString(unicode_text, CP1252, htmlFallback);
@@ -126,8 +128,8 @@ public class CharsetUtils {
 	}
 
 	/**
-	 * Best effort to re-encode string to specified {@linkplain Charset} via
-	 * ICU4J any-latin transliterator. <br/>
+	 * Best effort to re-encode string to specified {@linkplain Charset} via ICU4J
+	 * any-latin transliterator. <br/>
 	 * Only works well for charsets that are LATIN/US-ASCII based.
 	 * 
 	 * @param unicode_text
@@ -139,32 +141,39 @@ public class CharsetUtils {
 		}
 		CharsetEncoder encoder = charset.newEncoder();
 		StringBuilder sb = new StringBuilder(unicode_text.length());
-		//String[] split = unicode_text.split("");
-		//for (String letter : split) {
-		unicode_text.codePoints().forEach(cp->{
+		// String[] split = unicode_text.split("");
+		// for (String letter : split) {
+		unicode_text.codePoints().forEach(cp -> {
 			String letter = new String(Character.toChars(cp));
-			if (!encoder.canEncode(letter)) {
-				String asLatinLetter = asLatin.transliterate(letter);
-				if (encoder.canEncode(asLatinLetter)) {
-					sb.append(asLatinLetter);
-					return;
-				}
-				String asAsciiLetter = asAscii.transliterate(letter);
-				if (encoder.canEncode(asAsciiLetter)){
-					sb.append(asAsciiLetter);
-					return;
-				}
-				if (htmlFallback) {
-					String htmlEscaped = ESCAPE_EXTENDED_FALLBACK.translate(asAsciiLetter);
-					if (!alreadyLogged.contains(asAsciiLetter)) {
-						log.info("ESCAPE_EXTENDED_FALLBACK: '" + asAsciiLetter + "' => " + htmlEscaped);
-						alreadyLogged.add(asAsciiLetter);
-					}
-					sb.append(htmlEscaped);
-					return;
-				}
+			if (encoder.canEncode(letter)) {
+				sb.append(letter);
+				return;
 			}
-			sb.append(letter);
+			String asLatinLetter = asLatin.transliterate(letter);
+			if (encoder.canEncode(asLatinLetter)) {
+				sb.append(asLatinLetter);
+				return;
+			}
+			String asLatinAsciiLetter = asLatinAscii.transliterate(letter);
+			if (encoder.canEncode(asLatinAsciiLetter)) {
+				sb.append(asLatinAsciiLetter);
+				return;
+			}
+			String asAsciiLetter = asAscii.transliterate(letter);
+			if (encoder.canEncode(asAsciiLetter)) {
+				sb.append(asAsciiLetter);
+				return;
+			}
+			if (htmlFallback) {
+				String htmlEscaped = ESCAPE_EXTENDED_FALLBACK.translate(asLatinAsciiLetter);
+				if (!alreadyLogged.contains(asLatinAsciiLetter)) {
+					log.info("ESCAPE_EXTENDED_FALLBACK: '" + asLatinAsciiLetter + "' => " + htmlEscaped);
+					alreadyLogged.add(asLatinAsciiLetter);
+				}
+				sb.append(htmlEscaped);
+				return;
+			}
+			sb.append(" ");
 		});
 		return sb.toString();
 	}
