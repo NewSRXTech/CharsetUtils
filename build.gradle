@@ -3,7 +3,7 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'maven'
 
 group "CharsetUtils"
-version = '20170322'
+version = '20190129'
 
 sourceCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
@@ -30,10 +30,10 @@ sourceSets {
 
 dependencies {
 	//translit from any to latin
-	compile group: 'com.ibm.icu', name: 'icu4j', version: '58.2'
+	compile group: 'com.ibm.icu', name: 'icu4j', version: '63.1'
 	
 	//for stringescapeutils for fallback encoding conversion to html5 forms
-	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8'
 	
 	//only for testing
     testCompile 'org.testng:testng:6.+'
